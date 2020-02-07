@@ -1,5 +1,5 @@
 from json import dumps
-from src.template.encoders import TemplateEncoder
+from src.template.encoders.template_encoder import TemplateEncoder
 
 
 class Template(object):
@@ -16,3 +16,9 @@ class Template(object):
 
     def add_outputs(self, resource):
         self.outputs.update(resource.output)
+
+    def get_resource(self, resource_name):
+        if self.resources[resource_name]:
+            return self.resources[resource_name]
+        else:
+            raise Exception("Resource '{}' not found in template".format(resource_name))

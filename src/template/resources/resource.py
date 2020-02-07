@@ -1,7 +1,7 @@
 from json import dumps
-from ..encoders import ResourceEncoder
-from ..resource_resolvers import RefResolver
-from .output import Output
+from src.template.encoders.resource_encoder import ResourceEncoder
+from src.template.resource_resolvers.ref_resolver import RefResolver
+from src.template.resources.output import Output
 
 
 class Resource(object):
@@ -33,8 +33,8 @@ class Resource(object):
         )
         return self
 
-    def get_output_resolver(self):
+    def get_output_resolver(self, output_name):
         if self.output:
-            return self.output.get_resolver()
+            return self.output["{}{}".format(self.name, output_name)].get_resolver()
         else:
             raise Exception("No exported value")

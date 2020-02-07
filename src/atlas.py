@@ -1,20 +1,20 @@
-from .db.db_factory import DbFactory
-from src.project import Project
+from src.db.db_factory import DbFactory
+from src.project.project import Project
 
 
 class Atlas(object):
-    def __init__(self, storage_type):
-        self.db = DbFactory().get_db(
-            storage_type, "/", "users", "spencerpost", "Source", "such_atlas_etc"
-        )
+    def __init__(self, db):
+        self.db = db
         if self.db.persisted():
             self.copy(self.load())
         else:
             self.projects = {}
 
-    def create_project(self, project_name, *bootstrapper_dir_components):
+    def create_project(
+        self, project_name, hosted_zone_id, dns_name, *bootstrapper_dir_components
+    ):
         self.projects[project_name] = Project(
-            project_name, *bootstrapper_dir_components
+            project_name, hosted_zone_id, dns_name, *bootstrapper_dir_components
         )
         self.save()
 

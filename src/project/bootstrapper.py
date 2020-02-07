@@ -1,6 +1,20 @@
+from src.template.resources.ecs_service_role import EcsServiceRole
+from src.template.resources.elastic_ip import ElasticIp
+from src.template.resources.internet_gateway import InternetGateway
+from src.template.resources.nat_gateway import NatGateway
+from src.template.resources.route import Route
+from src.template.resources.route_table import RouteTable
+from src.template.resources.security_group import SecurityGroup
+from src.template.resources.security_group_egress import SecurityGroupEgress
+from src.template.resources.security_group_ingress import SecurityGroupIngress
+from src.template.resources.subnet import Subnet
+from src.template.resources.subnet_route_table_association import (
+    SubnetRouteTableAssociation,
+)
+from src.template.resources.vpc import Vpc
+from src.template.resources.vpc_gateway_attachment import VpcGatewayAttachment
 from .project_component import ProjectComponent
-from src.template.resources import *
-from src.template.resource_resolvers import *
+from src.template.resource_resolvers.get_att_resolver import GetAttResolver
 
 
 class Bootstrapper(ProjectComponent):
@@ -47,9 +61,9 @@ class Bootstrapper(ProjectComponent):
         self.template.add_resource(private_route_table)
         private_internet_route = Route(
             "PrivateInternetRoute",
-            nat_gateway.get_name_resolver(),
             private_route_table.get_name_resolver(),
             "0.0.0.0/0",
+            nat_gateway_resolver=nat_gateway.get_name_resolver(),
         )
         self.template.add_resource(private_internet_route)
         private_route_table_subnet_association = SubnetRouteTableAssociation(
@@ -64,9 +78,9 @@ class Bootstrapper(ProjectComponent):
         self.template.add_resource(public_route_table)
         public_internet_route = Route(
             "PublicInternetRoute",
-            nat_gateway.get_name_resolver(),
             public_route_table.get_name_resolver(),
             "0.0.0.0/0",
+            internet_gateway_resolver=internet_gateway.get_name_resolver(),
         )
         self.template.add_resource(public_internet_route)
         public_route_table_subnet_association = SubnetRouteTableAssociation(
@@ -98,3 +112,18 @@ class Bootstrapper(ProjectComponent):
             "22",
         )
         self.template.add_resource(allow_ssh_ingress)
+        allow_http_ingress = SecurityGroupIngress(
+            "AllowSshIngress",
+            "0.0.0.0/0",
+            GetAttResolver(security_group.name, "GroupId"),
+            "tcp",
+            "80",
+            "80",
+        )
+        self.template.add_resource(allow_http_ingress)
+        execution_role = EcsServiceRole(
+            self.format_name("ServiceRole")
+        ).with_attr_output(
+            "EcrServiceRoleArn", GetAttResolver(self.format_name("ServiceRole"), "Arn")
+        )
+        self.template.add_resource(execution_role)

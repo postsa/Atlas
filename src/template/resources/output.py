@@ -1,4 +1,4 @@
-from src.template.resource_resolvers import OutputResolver
+from src.template.resource_resolvers.output_resolver import OutputResolver
 
 
 class Output(object):

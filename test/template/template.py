@@ -1,8 +1,8 @@
 from unittest import TestCase
 
-from src.template.resource_resolvers import GetAttResolver
-from src.template import Template
-from src.template.resources import Vpc
+from src.template.resource_resolvers.get_att_resolver import GetAttResolver
+from src.template.template import Template
+from src.template.resources.vpc import Vpc
 
 
 class TemplateTest(TestCase):

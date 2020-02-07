@@ -1,5 +1,5 @@
 from unittest import TestCase
-from src.template.resources import Vpc
+from src.template.resources.vpc import Vpc
 
 
 class VpcTest(TestCase):
