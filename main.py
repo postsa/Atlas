@@ -40,12 +40,12 @@ if __name__ == "__main__":
     # )
     atlas.add_service(
         "AtlasDemo",
-        "nginx2",
+        "subproject",
         "/",
         "users",
         "spencerpost",
         "Source",
         "the_atlas_demo",
         "project",
-        "nginx2",
+        "subproject",
     )

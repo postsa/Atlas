@@ -26,9 +26,13 @@ class ProjectComponent(object):
     def create_resources(self):
         pass
 
+    def create_build_files(self):
+        pass
+
     def create(self):
         self.makedir()
         self.create_resources()
+        self.create_build_files()
         self.write_template()
 
     def get_resource(self, resource):

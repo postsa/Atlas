@@ -1,3 +1,4 @@
+from src.template.resources.ecr import Ecr
 from src.template.resources.ecs_service_role import EcsServiceRole
 from src.template.resources.elastic_ip import ElasticIp
 from src.template.resources.internet_gateway import InternetGateway
@@ -127,3 +128,5 @@ class Bootstrapper(ProjectComponent):
             "EcrServiceRoleArn", GetAttResolver(self.format_name("ServiceRole"), "Arn")
         )
         self.template.add_resource(execution_role)
+        ecr = Ecr(self.format_name("Ecr"), "{}/images".format(self.name.lower()))
+        self.template.add_resource(ecr)
